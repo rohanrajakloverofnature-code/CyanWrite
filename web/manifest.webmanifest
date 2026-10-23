@@ -1,0 +1,12 @@
+{
+  "id": "./",
+  "name": "CyanWrite",
+  "short_name": "CyanWrite",
+  "description": "Private local-first English writing and sentence-structure coach",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#091216",
+  "theme_color": "#071318",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+}

@@ -1,0 +1,10 @@
+<resources>
+  <!-- MainActivity extends AppCompatActivity and requires an AppCompat theme. -->
+  <style name="Theme.CyanWrite" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:fontFamily">sans</item>
+    <item name="android:colorAccent">@color/cyan_primary</item>
+    <item name="android:navigationBarColor">#07151B</item>
+    <item name="android:statusBarColor">#07151B</item>
+    <item name="android:windowLightStatusBar">false</item>
+  </style>
+</resources>
