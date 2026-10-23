@@ -15,3 +15,15 @@
 @media(max-width:600px){.proofreading-bar{align-items:flex-start;flex-wrap:wrap}}
 
 .ai-settings label:not(.setting-row){display:grid;gap:8px;margin:16px 0;color:var(--text);font-size:12px}.ai-settings input:not([type=checkbox]),.ai-settings select{width:100%;min-width:0;max-width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:11px}.ai-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.ai-settings [role=status]{overflow-wrap:anywhere}.ai-settings .primary:disabled{opacity:.5;cursor:wait}
+
+#suggestion-context{padding:0 22px;margin:0 0 16px;font-size:12px}.suggestion .suggestion-context{font-size:11px;color:var(--cyan);margin-bottom:10px}.suggestion-label{line-height:1.6}
+
+/* Explicit review lanes: shared by Android assets and responsive web. */
+.suggestion-group{padding:14px 0 5px;border-top:1px solid var(--border)}
+.suggestion-group-title{font-size:13px;font-weight:600;margin:0 20px 6px;color:var(--text)}
+.suggestion-group-description,.group-empty{font-size:11px;line-height:1.65;margin:0 20px 12px;overflow-wrap:anywhere}
+.group-empty{padding:10px;border:1px dashed var(--border);border-radius:6px}
+.assistant-tabs{gap:14px;flex-wrap:wrap}.assistant-tabs button{white-space:nowrap}
+.structure-status{border-left:2px solid var(--cyan);padding-left:10px!important}
+.suggestion-actions{flex-wrap:wrap}.suggestion-group .suggestion{min-width:0}
+@media(max-width:760px){.assistant-tabs{gap:15px;padding:0 16px}.assistant-tabs button{font-size:11px}.suggestion-group-title{font-size:14px}.suggestion-group-description,.group-empty{font-size:12px}}

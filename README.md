@@ -1,4 +1,4 @@
-# CyanWrite 1.2.2
+# CyanWrite 1.2.4 — consolidated review build
 
 A local-first English writing studio for web and Android. Both use the same bundled HTML, CSS, JavaScript and sentence engine. No account, API key, subscription, or per-request payment is required for the offline core.
 
@@ -20,7 +20,13 @@ The offline engine handles selected causal, concessive, coordinated-clause and c
 
 **Writing modes:** Normal, Administrative, Legal, Formal, Business, Literary and High standards. Each conditions supported wording changes; High standards combines selected concision, formal and administrative wording rules, not every register indiscriminately. Correct spelling and grammar do not change with register. Legal mode protects modal/conditional obligations from structural changes. It is not legal advice.
 
+**General suggestions update:** The panel now visibly separates Grammar & correctness, Sentence structure, and Writing mode & tone, including clearly labelled AI results. Each mode has supported reusable wording families; selected clause patterns provide concrete simple, complex, or compound rewrites. Tone-only edits never claim a structural conversion, and unsupported or already suitable text may stay unchanged. Quotations are protected against all actionable local edits, while obligations/conditions and ambiguous nested clauses are protected from local structural conversion in every mode. See [the general-fix notes and limits](docs/GENERAL-SUGGESTIONS-v1.2.4.md).
+
 No change is applied without your action. Offered replacements and exact offsets are validated. Apply and one-step undo are supported.
+
+## DeepSeek endpoint fix
+
+Full DeepSeek Chat Completions URLs are now accepted without duplicating the path; invalid official paths are blocked before transport. Preferences shows the final POST URL and HTTP 405 has actionable guidance. The screenshot alone does not identify the failing saved URL. See [the request trace and verification](docs/DEEPSEEK-405.md).
 
 ## Your recurring patterns
 
@@ -39,7 +45,7 @@ cd android
 JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 ./gradlew --no-daemon assembleDebug testDebugUnitTest
 ```
 
-Version 1.2.2, version code 7. Optional personal-key AI setup is described in `docs/BYOK.md`. This is a debug-signed review build, not a store release. Current verification includes 83/83 JavaScript tests, 25 model-selection browser checks and 18 DeepSeek browser checks with mocked providers, five of five resource-aware Android tests, and successful `assembleDebug` plus `lintDebug` (six warnings, zero errors). These checks do not run a physical-device or emulator WebView renderer and do not validate live-provider quality; no such result is claimed. A compatible, current Android System WebView is required. Direct Android file export requires Android 10 or newer; older versions show an explanation rather than invoking unavailable Downloads APIs.
+Version **1.2.4, version code 9** replaces both private v1.2.3 review builds. Optional personal-key AI setup is described in `docs/BYOK.md`. This is a debug-signed owner-review build, not a store release. The accompanying evidence includes complete JavaScript tests, a 28-combination × 27-sample outcome matrix (756 checks), mocked browser UI assertions, resource-aware Android tests, lint/build output, and APK/web asset parity checks. No live-provider rewrite quality, physical-device, or emulator WebView result is claimed. A current Android System WebView is required. Direct Android file export requires Android 10 or newer; older versions show an explanation.
 
 The old anonymous Cloudflare preview was temporary and is not a durable deployment. Its exact provider-side failure is unconfirmed. Use an owner-controlled static host for a permanent address. Do not create another anonymous deployment and describe it as permanent.
 
@@ -78,7 +84,7 @@ The offline rules are limited and cannot understand arbitrary English or guarant
 
 ## Publication
 
-No public GitHub repository has been created. Public source publication and the exact payload remain subject to the owner's approval. No project license has been imposed. Build outputs, SDK paths, logs, signing keys and private environment files are excluded from the source delivery archive. This update does not publish or deploy the project.
+The approved 1.2.2 baseline is published at https://github.com/rohanrajakloverofnature-code/CyanWrite. This 1.2.4 APK/source is an unpublished review payload. No new GitHub source, APK, tag, or release is authorized until the owner approves the exact payload. The temporary mobile web preview is refreshed separately for review only; it is not permanent hosting. No project license has been imposed. Build outputs, SDK paths, logs, signing keys and private environment files are excluded from the source archive.
 
 ## Project map
 

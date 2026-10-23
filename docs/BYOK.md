@@ -1,6 +1,6 @@
 # Use your own AI key
 
-CyanWrite 1.2.2 (version code 7) adds optional personal-key AI without changing the free offline core. Provider charges may apply. A key is not a guarantee of correct writing, universal API compatibility or account access to every model.
+CyanWrite 1.2.3 review (version code 8) adds optional personal-key AI without changing the free offline core. Provider charges may apply. A key is not a guarantee of correct writing, universal API compatibility or account access to every model.
 
 ## Set up on your phone
 
@@ -9,7 +9,7 @@ Open **Preferences → Optional AI · your own API key**. Select **My own API ke
 - **Automatic / app default** uses the provider default: Gemini `gemini-3.8-flash`, OpenAI `gpt-4o-mini`, or DeepSeek `deepseek-flash`.
 - **Manual** uses the exact model ID entered by you. Anthropic and custom providers remain manual-only and require an exact model ID; CyanWrite does not discover models or fall back to another model.
 
-A blank saved override means **use the default**; it is not a missing Gemini model error. Gemini's default is `gemini-3.8-flash`, as documented in the [official Gemini model documentation](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash). The saved `models/` prefix used by older Gemini entries is normalized before the request. A valid old override remains selected. An old numeric entry such as `2` is repaired to Automatic and a visible notice explains the repair; a newly entered numeric model override is rejected before any network transport. Custom providers also need their HTTPS API base address. Do not paste the entire chat-completions URL: the app appends the appropriate API path.
+A blank saved override means **use the default**; it is not a missing Gemini model error. Gemini's default is `gemini-3.8-flash`, as documented in the [official Gemini model documentation](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash). The saved `models/` prefix used by older Gemini entries is normalized before the request. A valid old override remains selected. An old numeric entry such as `2` is repaired to Automatic and a visible notice explains the repair; a newly entered numeric model override is rejected before any network transport. Custom providers also need their HTTPS API base address. For DeepSeek, either the base address or full Chat Completions URL is accepted; the suffix is appended only once. Other provider adapters still expect their documented base addresses.
 
 The same model resolver and validation are used by analysis, translation, connection test, native transport, and generic server model validation. Automatic means selecting the documented app default; it is not model discovery, availability probing, fallback, or retry behavior.
 
@@ -19,7 +19,7 @@ The key stays in memory only. It is not saved in drafts, learning exports, local
 
 ## Provider notes
 
-DeepSeek uses the official base address `https://api.deepseek.com` and default model `deepseek-flash`. Manual mode accepts an exact account-supported model ID; no key is supplied or model enabled automatically. The app sends OpenAI-compatible Chat Completions requests to `/chat/completions`, authenticates with a Bearer header, and requests JSON output. Switching providers resets the endpoint/model preset and clears the session key.
+DeepSeek uses the official base address `https://api.deepseek.com` and default model `deepseek-flash`. Manual mode accepts an exact account-supported model ID; no key is supplied or model enabled automatically. Root and `/v1` bases, their trailing-slash forms, and full `/chat/completions` or `/v1/chat/completions` URLs are accepted. Other paths on the official API host are blocked before sending the key. Preferences shows the final POST URL. The app sends OpenAI-compatible Chat Completions requests to `/chat/completions` (or `/v1/chat/completions` when configured), authenticates with a Bearer header, and requests JSON output. Switching providers resets the endpoint/model preset and clears the session key.
 
 Gemini uses its GenerateContent adapter and the app default above. Anthropic uses Messages and remains manual-only. OpenAI and other OpenAI-compatible providers use the selected exact model where manual mode is required or the documented app default where supported. Model access, availability and pricing are controlled by each provider; CyanWrite does not discover, switch, or retry models.
 
@@ -49,8 +49,10 @@ The earlier offline core used a small hand-written rule set; it was not a compre
 
 The 1.2.0 release passed 65 JavaScript tests, five resource-aware Android startup/export tests, Android debug assembly and lint. A real browser session passed 13 shared-UI checks: manual-only requests, analysis plus translation, result rendering, mother-tongue prompt, key privacy, authentication errors, local fallback, key clearing, spelling/grammar Apply, and Undo. Provider responses in these tests were mocked; no paid model was used for validation.
 
-Android tests do not execute the Chromium WebView renderer or prove a physical-phone install. No physical device/emulator test, live-provider quality test, universal grammar coverage or flawless-AI claim is made. The earlier review APK was debug-signed, version 1.2.1/code 6, not a store release. No source has been published publicly.
+Android tests do not execute the Chromium WebView renderer or prove a physical-phone install. No physical device/emulator test, live-provider quality test, universal grammar coverage or flawless-AI claim is made. The earlier review APK was debug-signed, version 1.2.1/code 6, not a store release. The approved 1.2.2 baseline has since been published; the 1.2.3 fix is held for exact-payload review.
 
 Version 1.2.1 added eight DeepSeek-specific mocked tests (73 JavaScript tests total), including both models, exact endpoint/authentication, validated suggestions, translation, safe errors, cancellation, endpoint guards and the native transport bridge. The accompanying 1.2.1 test/build history remains applicable.
 
-Current 1.2.2/code 7 verification: all 83 JavaScript tests passed; 25 model-selection browser checks and 18 DeepSeek browser checks passed with mocked providers; five of five resource-aware Android tests passed; and `assembleDebug` plus `lintDebug` succeeded with six warnings and zero errors. These checks do not prove a physical-device or emulator WebView install or live-provider quality. No real key or billable request was used. Final clean APK packaging was still in progress to exclude temporary local test-harness assets; no public publishing or deployment was performed.
+Historical 1.2.2/code 7 verification: all 83 JavaScript tests passed; 25 model-selection browser checks and 18 DeepSeek browser checks passed with mocked providers; five of five resource-aware Android tests passed; and `assembleDebug` plus `lintDebug` succeeded with six warnings and zero errors. These checks do not prove a physical-device or emulator WebView install or live-provider quality. No real key or billable request was used. Final clean APK packaging was still in progress to exclude temporary local test-harness assets; no public publishing or deployment was performed.
+
+Current 1.2.3/code 8 review: 91 JavaScript tests pass; 37 web and 37 mock-native browser assertions pass; six Android unit tests pass, including actual native POST configuration for six URL/body combinations. Clean Android build, tests, and lint succeeded (zero errors, six warnings); all 14 bundled web assets match source and the signing certificate matches 1.2.2. See [DeepSeek 405 diagnosis](DEEPSEEK-405.md). No live key or billable model request was used; no 1.2.3 publication or deployment was made.

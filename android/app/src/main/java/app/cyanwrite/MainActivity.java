@@ -90,6 +90,21 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    static void configureAIConnection(HttpsURLConnection connection, JSONObject headers, String body) throws IOException, JSONException {
+        connection.setInstanceFollowRedirects(false);
+        connection.setConnectTimeout(20_000);
+        connection.setReadTimeout(20_000);
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        java.util.Iterator<String> names = headers.keys();
+        while (names.hasNext()) {
+            String name = names.next();
+            connection.setRequestProperty(name, headers.getString(name));
+        }
+        byte[] payload = body.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        try (OutputStream output = connection.getOutputStream()) { output.write(payload); }
+    }
+
     public final class AndroidBridge {
         private static final int MAX_BODY_CHARS = 200_000;
         private static final int MAX_RESPONSE_BYTES = 500_000;
@@ -170,18 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 if (request.cancelled.get()) return;
                 HttpsURLConnection connection = (HttpsURLConnection) new URL(target.toString()).openConnection();
                 request.connection = connection;
-                connection.setInstanceFollowRedirects(false);
-                connection.setConnectTimeout(20_000);
-                connection.setReadTimeout(20_000);
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                java.util.Iterator<String> names = headers.keys();
-                while (names.hasNext()) {
-                    String name = names.next();
-                    connection.setRequestProperty(name, headers.getString(name));
-                }
-                byte[] payload = body.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                try (OutputStream output = connection.getOutputStream()) { output.write(payload); }
+                configureAIConnection(connection, headers, body);
                 if (request.cancelled.get()) return;
                 status = connection.getResponseCode();
                 InputStream stream = status >= 400 ? connection.getErrorStream() : connection.getInputStream();

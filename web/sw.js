@@ -1,5 +1,5 @@
-const CACHE = 'cyanwrite-shell-v1.2.2-r1';
-const ASSETS = ['./', './index.html', './style.css', './app.js', './ai.js', './native-ai.js', './engine.js', './highlights.js', './structure.js', './learning.js', './icon.svg', './manifest.webmanifest', './vendor/xlsx.full.min.js'];
+const CACHE = 'cyanwrite-shell-v1.2.4-review-r1';
+const ASSETS = ['./', './index.html', './style.css', './app.js', './check-policy.js', './ai.js', './native-ai.js', './engine.js', './highlights.js', './structure.js', './learning.js', './icon.svg', './manifest.webmanifest', './vendor/xlsx.full.min.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });

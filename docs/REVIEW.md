@@ -1,5 +1,9 @@
 # CyanWrite review history
 
+## 1.2.3 / version code 8 — private review
+
+See [DeepSeek request tracing and 405 fix](DEEPSEEK-405.md). Full-URL normalization and official-route validation now cover Test connection, analysis, and translation on web and native transport. 91 JavaScript tests, 37 web and 37 mock-native UI assertions pass. Six Android unit tests pass, including real native HTTP configuration with six mocked URL/body combinations. Exact source/APK publication awaits owner approval. No live key or billable model generation was used.
+
 ## 1.2.2 / version code 7
 
 ### Verified
@@ -37,4 +41,4 @@ The deterministic rule set handles selected patterns, not arbitrary English. It 
 
 The free core has no API fees, and no paid service was provisioned. Local-model hardware/electricity and stable hosting are separate considerations. Never promise unlimited, error-free, zero-cost AI.
 
-The old Cloudflare URL came from an anonymous temporary account with a 60-minute claim window. It was unavailable from that environment; the exact provider-side cause of the owner's SSL error remained unconfirmed. No public GitHub repository was created. Permanent owner-controlled deployment and public-source publication still need the appropriate account and exact publication approval.
+The old Cloudflare URL came from an anonymous temporary account with a 60-minute claim window. It was unavailable from that environment; the exact provider-side cause of the owner's SSL error remained unconfirmed. That historical review did not publish a repository. The approved 1.2.2 baseline was subsequently published at https://github.com/rohanrajakloverofnature-code/CyanWrite. Any new release still needs exact-payload approval.

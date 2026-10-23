@@ -1,4 +1,4 @@
-import {sentenceSpans,structureRewrites} from './structure.js';
+import {sentenceSpans,structureRewrites,registerRewrites} from './structure.js';
 /**
  * CyanWrite's intentionally small, deterministic writing coach.
  * Suggestions are conservative review prompts; this is not a full proofreader.
@@ -15,8 +15,9 @@ function quotedRanges(text) {
   const ranges = []; let start = -1; let quote = '';
   for (let i = 0; i < text.length; i++) {
     const c = text[i];
-    if (quote) { if (c === quote || (quote === '“' && c === '”')) { ranges.push([start, i + 1]); start = -1; quote = ''; } }
-    else if (c === '"' || c === '“') { start = i; quote = c; }
+    const apostrophe=(c==="'"||c==='’')&&/[\p{L}\p{N}]/u.test(text[i-1]||'')&&/[\p{L}\p{N}]/u.test(text[i+1]||'');
+    if (quote) { if (!apostrophe&&(c === quote || (quote === '“' && c === '”') || (quote==='‘'&&c==='’'))) { ranges.push([start, i + 1]); start = -1; quote = ''; } }
+    else if (c === '"' || c === '“' || c==='‘' || (c==="'"&&!/[\p{L}\p{N}]/u.test(text[i-1]||''))) { start = i; quote = c; }
   }
   if (start >= 0) ranges.push([start, text.length]);
   return ranges;
@@ -87,18 +88,23 @@ export function analyze(text, options = {}) {
   if (o.punctuation) { for (const m of text.matchAll(/ {2,}/g)) add(out, issue('punctuation-double-space', m.index, m[0], [' '], 'Use a single space.', 'punctuation', 0.99)); for (const m of text.matchAll(/([,.;:!?])\1+/g)) add(out, issue('punctuation-repeat', m.index, m[0], [m[1]], 'Repeated punctuation may be unintended.', 'punctuation', 0.98)); }
   if (o.clarity) for (const m of text.matchAll(/\b(very|really|basically|obviously)\s+(\w+)/gi)) add(out, issue(`clarity-${m[1].toLowerCase()}`, m.index, m[0], [m[2]], `Consider removing “${m[1]}” if it adds no meaning.`, 'clarity', 0.72));
   if (o.vocab && o.vocabulary.length) for (const v of o.vocabulary.slice(0, 100)) { const word = v.word.trim(); if (!word) continue; for (const m of text.matchAll(new RegExp(`\\b${word.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}\\b`, 'gi'))) add(out, issue(`vocab-${word.toLowerCase()}`, m.index, m[0], [], `Imported word “${m[0]}” (${v.meaning || 'meaning not supplied'}) appears here; its context and usage are unverified.`, 'vocabulary', 0.55, 'user-vocabulary')); }
-  if (o.structure) for (const {offset,original} of sentenceSpans(text)) {
-    const candidates=structureRewrites(original,o);
+  if (o.structure||o.clarity) for (const {offset,original} of sentenceSpans(text)) {
+    // Mode is not a synonym for clause structure: questions still need tone review.
+    // Do not rewrite a sentence that overlaps quoted evidence, including multi-sentence quotes.
+    if(ranges.some(([start,end])=>start<offset+original.length&&end>offset))continue;
+    const structural=o.structure?structureRewrites(original,o):[];
+    const candidates=structural.length?structural:registerRewrites(original,o);
     for(const c of candidates){
       // Fold enabled safe spelling/grammar/punctuation corrections into the complete replacement.
       let value=c.value;
       const corrections=analyze(value,{...o,structure:false,clarity:false,vocab:false}).filter(x=>['grammar','spelling','punctuation'].includes(x.category)&&x.replacements.length).sort((a,b)=>b.offset-a.offset);
       for(const correction of corrections){if(value.slice(correction.offset,correction.offset+correction.length)===correction.original)value=value.slice(0,correction.offset)+correction.replacements[0]+value.slice(correction.offset+correction.length);}
-      add(out,issue(`structure-${c.pattern}-${c.structure}`,offset,original,[value],c.message,'structure',c.pattern==='comma-splice'?0.87:0.79,'local-rule',{patternId:`structure-${c.pattern}`,structureType:c.structure,mode:o.mode}));
+      const category=c.structure==='unchanged'?'tone':'structure';
+      add(out,issue(`${category}-${c.pattern}-${c.structure}`,offset,original,[value],c.message,category,c.pattern==='comma-splice'?0.87:0.79,'local-rule',{patternId:`${category}-${c.pattern}`,structureType:c.structure,requestedStructureType:o.structureType,mode:o.mode}));
     }
-    if(!candidates.length&&original.split(/\s+/).length>=20&&(o.structureType==='automatic'||o.structureType==='simple'))add(out,issue('structure-long-sentence',offset,original,[],'This sentence is long, but no safe automatic split was found. Review its clause boundaries; length alone is not an error.','structure',0.6,'local-rule',{patternId:'structure-long-sentence',structureType:o.structureType,mode:o.mode}));
+    if(o.structure&&!candidates.length&&original.split(/\s+/).length>=20&&(o.structureType==='automatic'||o.structureType==='simple'))add(out,issue('structure-long-sentence',offset,original,[],'This sentence is long, but no safe automatic split was found. Review its clause boundaries; length alone is not an error.','structure',0.6,'local-rule',{patternId:'structure-long-sentence',structureType:o.structureType,mode:o.mode}));
   }
-  return out.sort((a, b) => a.offset - b.offset || a.id.localeCompare(b.id));
+  return out.filter(i => !i.replacements.length || !ranges.some(([a,b]) => i.offset < b && i.offset + i.length > a)).sort((a, b) => a.offset - b.offset || a.id.localeCompare(b.id));
 }
 export function applySuggestion(text, foundIssue, replacement) { if (typeof text !== 'string' || !foundIssue || typeof replacement !== 'string') throw new TypeError('text, issue, and replacement are required'); if (!Number.isInteger(foundIssue.offset) || !Number.isInteger(foundIssue.length) || foundIssue.offset < 0 || foundIssue.offset + foundIssue.length > text.length) throw new Error('Invalid issue offsets'); if (text.slice(foundIssue.offset, foundIssue.offset + foundIssue.length) !== foundIssue.original) throw new Error('Stale issue offsets'); if (!Array.isArray(foundIssue.replacements) || !foundIssue.replacements.includes(replacement)) throw new Error('Replacement is not offered by this issue'); return text.slice(0, foundIssue.offset) + replacement + text.slice(foundIssue.offset + foundIssue.length); }
 export function stats(issues) { return (issues || []).reduce((a, i) => { a.total++; a.byCategory[i.category] = (a.byCategory[i.category] || 0) + 1; return a; }, { total: 0, byCategory: {} }); }

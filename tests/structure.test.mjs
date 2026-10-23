@@ -38,7 +38,7 @@ test('every writing mode has supported mode-conditioned wording',()=>{
     ['business','Please be advised that the meeting starts.','Please note that the meeting starts.'],
     ['literary','She walked in a very quiet manner.','She walked quietly.'],
     ['high','With regard to the report, we work in order to improve.','Regarding the report, we work to improve.']
-  ]){const i=rewrites(text,{mode})[0];assert.ok(i,mode);assert.equal(i.mode,mode);assert.equal(i.replacements[0],expected);}
+  ]){const i=analyze(text,{...quiet,mode}).find(i=>i.category==='tone');assert.ok(i,mode);assert.equal(i.mode,mode);assert.equal(i.structureType,'unchanged');assert.equal(i.replacements[0],expected);}
 });
 test('legal obligations are not rewritten into changed duties',()=>{
   for(const structureType of ['automatic','simple','complex','compound']){
@@ -53,8 +53,7 @@ test('mode wording is applied to selected structure replacements too',()=>{
 test('abbreviations decimals contractions quotes and unfinished tails retain valid offsets',()=>{
   const text='Dr. Smith reviewed 3.14 results. "We can\'t attend because the office is closed." The plan changed because';
   const list=rewrites(text,{structureType:'compound'});
-  assert.equal(list.length,1);assert.equal(list[0].original,'"We can\'t attend because the office is closed."');
-  assert.equal(list[0].replacements[0],'"The office is closed, so we can\'t attend."');
+  assert.equal(list.length,0,'Quoted evidence is not restructured in any mode');
   assert.ok(list.every(i=>text.slice(i.offset,i.offset+i.length)===i.original));
   assert.equal(rewrites('The plan changed because costs increased',{structureType:'compound'}).length,0);
 });

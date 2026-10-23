@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { PROVIDERS, requestAI, validateAIResult } from '../web/ai.js';
+import { PROVIDERS, promptFor, requestAI, validateAIResult } from '../web/ai.js';
 
 const text = 'The plan changed because costs increased.';
 const opts = { grammar: true, spelling: true, punctuation: true, clarity: true, structure: true, vocab: true, mode: 'legal', structureType: 'compound' };
@@ -100,4 +100,50 @@ test('streamed provider responses are bounded while reading',async()=>{
 });
 test('network exceptions cannot leak key text into the UI',async()=>{
  await assert.rejects(requestAI({text,config:{provider:'openai',baseUrl:'https://provider.test/v1',model:'m',apiKey:'private-key'},transport:async()=>{throw Error('private-key raw error')}}),e=>!e.message.includes('private-key')&&e.message.includes('connection failed'));
+});
+
+test('general prompt explicitly reviews completed sentences and leaves draft tails alone', () => {
+  const prompt = promptFor('analyze', 'First sentence. Unfinished draft', { mode: 'business', structureType: 'automatic' }, [], 'English');
+  assert.match(prompt, /Assess every completed sentence/i);
+  assert.match(prompt, /unfinished final fragment.*do not complete/i);
+  assert.match(prompt, /business is concise, direct, and clear/i);
+  assert.match(prompt, /Tone, style, concision, and structure rewrites must cover one complete source sentence/i);
+});
+
+test('tone and style issues require complete source and replacement sentences', () => {
+  const source = 'The process is unclear. Another complete sentence.';
+  const whole = 'The process is unclear.';
+  const valid = validateAIResult({ issues: [{ offset: 0, length: whole.length, original: whole, category: 'tone', replacements: ['The process requires clarification.'], message: 'professional' }] }, source);
+  assert.equal(valid.issues.length, 1);
+  const partialSource = validateAIResult({ issues: [{ offset: 0, length: 10, original: 'The proces', category: 'style', replacements: ['The process'], message: 'style' }] }, source);
+  assert.deepEqual(partialSource, { issues: [] });
+  const fragmentReplacement = validateAIResult({ issues: [{ offset: 0, length: whole.length, original: whole, category: 'style', replacements: ['Requires clarification'], message: 'style' }] }, source);
+  assert.deepEqual(fragmentReplacement, { issues: [] });
+});
+
+test('empty AI drafts are rejected before transport', async () => {
+  let calls = 0;
+  await assert.rejects(requestAI({ text: ' \n\t ', config: { provider: 'openai', baseUrl: 'https://provider.test/v1', model: 'm', apiKey: 'k' }, transport: async () => { calls++; return response({}); } }), /must not be empty/);
+  assert.equal(calls, 0);
+});
+
+test('all structure and register replacements must be complete sentences', () => {
+  const source = 'The plan changed because costs increased.';
+  const base = { offset: 0, length: source.length, original: source, message: 'rewrite' };
+  const split = validateAIResult({ issues: [{ ...base, category: 'structure', replacements: ['Costs increased. The plan changed.'] }] }, source);
+  assert.equal(split.issues.length, 1);
+  const mixed = validateAIResult({ issues: [{ ...base, category: 'concision', replacements: ['Costs increased. Plan changed'] }] }, source);
+  assert.deepEqual(mixed, { issues: [] });
+});
+
+test('sentence rewrites preserve terminal kind, protected quotes, and numeric facts', () => {
+  const question = 'Why did the 2024 plan fail?';
+  const qbase = { offset: 0, length: question.length, original: question, category: 'tone', message: 'rewrite' };
+  assert.equal(validateAIResult({ issues: [{ ...qbase, replacements: ['The 2024 plan failed.'] }] }, question).issues.length, 0);
+  assert.equal(validateAIResult({ issues: [{ ...qbase, replacements: ['Why did the 2024 plan fail?'] }] }, question).issues.length, 0);
+  assert.equal(validateAIResult({ issues: [{ ...qbase, replacements: ['Why did the plan fail?'] }] }, question).issues.length, 0);
+
+  const quoted = 'The witness said, "First sentence. Second sentence." The report changed.';
+  const quotedIssue = { offset: 0, length: quoted.indexOf(' The report'), original: quoted.slice(0, quoted.indexOf(' The report')), category: 'style', replacements: ['The witness stated, "First sentence. Second sentence."'], message: 'rewrite' };
+  assert.deepEqual(validateAIResult({ issues: [quotedIssue] }, quoted), { issues: [] });
 });

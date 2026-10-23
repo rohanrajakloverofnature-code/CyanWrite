@@ -1,0 +1,72 @@
+{
+  "version": "1.2.4",
+  "script": "tests/browser-v124-review.js",
+  "mockOnly": true,
+  "liveProviderRequests": 0,
+  "results": [
+    {
+      "viewportOrFrameWidth": 1280,
+      "contentWidth": 1265,
+      "passedAssertions": 150,
+      "mockCalls": 28,
+      "error": null,
+      "horizontalOverflow": false,
+      "kind": "desktop browser viewport"
+    },
+    {
+      "viewportOrFrameWidth": 320,
+      "contentWidth": 305,
+      "passedAssertions": 150,
+      "mockCalls": 28,
+      "error": null,
+      "horizontalOverflow": false,
+      "kind": "same-origin responsive iframe"
+    },
+    {
+      "viewportOrFrameWidth": 390,
+      "contentWidth": 375,
+      "passedAssertions": 150,
+      "mockCalls": 28,
+      "error": null,
+      "horizontalOverflow": false,
+      "kind": "same-origin responsive iframe"
+    },
+    {
+      "viewportOrFrameWidth": 768,
+      "contentWidth": 753,
+      "passedAssertions": 150,
+      "mockCalls": 28,
+      "error": null,
+      "horizontalOverflow": false,
+      "kind": "same-origin responsive iframe"
+    }
+  ],
+  "totalPassedAssertions": 600,
+  "coverage": [
+    "all 28 mode/style combinations at each width",
+    "separate grammar, structure and mode/tone lanes",
+    "AI labels and settings in panel",
+    "selected mode/style in mocked requests",
+    "synthetic key not persisted",
+    "apply and one-step undo",
+    "category filters",
+    "honest no-structure status",
+    "empty categories visible",
+    "no horizontal page overflow"
+  ],
+  "preview": "https://8797-i08m3e0voxr9zljh93qko-8bd49d74.us2.manus.computer/",
+  "previewObserved": {
+    "version": "1.2.4",
+    "aiEnabled": false,
+    "groups": [
+      "Grammar & correctness",
+      "Sentence structure",
+      "Writing mode & tone"
+    ],
+    "representativeSummary": "1 correctness \u00b7 1 sentence structure \u00b7 1 wording/style",
+    "source": "Offline",
+    "mode": "business",
+    "style": "compound"
+  },
+  "limitations": "Responsive iframe tests are not physical-device, emulator WebView, IME or live-provider quality tests. This temporary HTTPS preview can sleep or expire."
+}

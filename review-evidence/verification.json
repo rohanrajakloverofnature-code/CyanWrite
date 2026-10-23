@@ -1,0 +1,107 @@
+{
+  "version": "1.2.4",
+  "versionCode": 9,
+  "packageBadging": "package: name='app.cyanwrite' versionCode='9' versionName='1.2.4' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'",
+  "apkSHA256": "b4f0178383f2c8229241b26a793ba5e7a2e26070a24d1d1798251ed3de14ca79",
+  "webAssetParity": [
+    {
+      "file": "icon.svg",
+      "sha256": "7061b85bc98abf53f8251ec842e0de6f184c06060bca63b1c826c34827eae122",
+      "matches": true
+    },
+    {
+      "file": "app.js",
+      "sha256": "a9a42a12393a17f84260f56dc6f3ee8e0ca812b4a05cfb818f770c567dd4f1c1",
+      "matches": true
+    },
+    {
+      "file": "engine.js",
+      "sha256": "1928a8e2f49131347119b7f4da1acc8d4e715a83f521ed027cd176ae0500ba9b",
+      "matches": true
+    },
+    {
+      "file": "index.html",
+      "sha256": "e0328b9aa61cbfa99de8f79f61d90c8df5d86b80834da4b8476719f553a9d447",
+      "matches": true
+    },
+    {
+      "file": "style.css",
+      "sha256": "4137186ecc13497d29c75ada8d1191bb613c173144c0a47dbbb8c1fea08b70d4",
+      "matches": true
+    },
+    {
+      "file": "learning.js",
+      "sha256": "825d9a3efd9f99673b6d48a75daaf96c5c914ea9b1d124faa5480b059caa5ba4",
+      "matches": true
+    },
+    {
+      "file": "manifest.webmanifest",
+      "sha256": "7b627027cd21492e984ef9916d135aa891d916be8c16a87c8f5205b7f84a51c0",
+      "matches": true
+    },
+    {
+      "file": "sw.js",
+      "sha256": "6be27814399822ad4bd5913416e809b701ed4030b19de33c28ef69cab99c61f5",
+      "matches": true
+    },
+    {
+      "file": "structure.js",
+      "sha256": "9b1b449bcd961f1a0be6473a042680ef9b709f0329d818a980a7a77c4de8b51c",
+      "matches": true
+    },
+    {
+      "file": "highlights.js",
+      "sha256": "d3eddcf1eeaf073ba02c77d5d186b3b0057844e4db545c7acc444e4a1bd60549",
+      "matches": true
+    },
+    {
+      "file": "native-ai.js",
+      "sha256": "95752918bb9dff4e12dbfe7cd217e5a99716bd646527727df2e2c3bfc59b1b5c",
+      "matches": true
+    },
+    {
+      "file": "ai.js",
+      "sha256": "b07b3cbdb670c2b06e96cc9b3b186787215773584258b446cadf746c30664ed5",
+      "matches": true
+    },
+    {
+      "file": "check-policy.js",
+      "sha256": "d2d8cbf25cbd4bdfe93fc1143feaf4f32f32bc14e525ee7272377ad7b799c9d5",
+      "matches": true
+    },
+    {
+      "file": "vendor/xlsx.full.min.js",
+      "sha256": "cc015130aa8521e7f088f88898eba949ccdcbfb38df0bd129b44b7273c3a6f41",
+      "matches": true
+    },
+    {
+      "file": "vendor/XLSX-LICENSE.txt",
+      "sha256": "4d2a38ac35cda06a555c84074a819d413339cd3691b822cae50f8f322fe01f64",
+      "matches": true
+    }
+  ],
+  "androidTests": [
+    {
+      "suite": "app.cyanwrite.NativeAiHttpTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "suite": "app.cyanwrite.MainActivityStartupTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0
+    }
+  ],
+  "javascriptSummary": "\u2139 tests 164\n\u2139 suites 0\n\u2139 pass 164\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 783.520998",
+  "preview": "https://8797-i08m3e0voxr9zljh93qko-8bd49d74.us2.manus.computer/",
+  "liveAI": false,
+  "gitHubPublished": false,
+  "limitations": [
+    "Bounded offline rules, not arbitrary English understanding",
+    "Mocked providers, no live provider rewrite-quality or account availability test",
+    "Browser responsive frames, not physical phone or emulator WebView rendering",
+    "Debug-signed review build; temporary preview can sleep or expire"
+  ]
+}
